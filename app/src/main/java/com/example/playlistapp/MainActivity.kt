@@ -8,9 +8,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 class MainActivity : AppCompatActivity() {
     private lateinit var bottomNavBar: BottomNavigationView
 
-    // comments testing ---------------------
-    // second comment
-
     private var position = -1
     private var title = ""
     private var body = ""
