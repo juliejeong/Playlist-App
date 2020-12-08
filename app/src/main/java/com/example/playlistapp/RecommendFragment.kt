@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -17,14 +18,16 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 class RecommendFragment : Fragment() {
-    private var postTitle: String? = null
-    private var postBody: String? = null
+    private var postTitle: String = ""
+    private var postBody: String = ""
+    private lateinit var titleText: TextView
+    private lateinit var bodyText: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            postTitle = it.getString(ARG_PARAM1)
-            postBody = it.getString(ARG_PARAM2)
+            postTitle = it.get(ARG_PARAM1).toString()
+            postBody = it.get(ARG_PARAM2).toString()
         }
     }
 
@@ -33,6 +36,10 @@ class RecommendFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view: View = inflater.inflate(R.layout.fragment_recommend, container, false)
+        titleText = view.findViewById(R.id.postTitle)
+        titleText.text = postTitle
+        bodyText = view.findViewById(R.id.postBody)
+        bodyText.text = postBody
         return view
     }
 

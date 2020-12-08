@@ -7,14 +7,12 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
     private lateinit var bottomNavBar: BottomNavigationView
-
-    private var position = -1
     private var title = ""
     private var body = ""
-    private lateinit var button: Button
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        mockDataAdd()
 
         val fragmentManager = supportFragmentManager
         fragmentManager.beginTransaction()
@@ -43,17 +41,28 @@ class MainActivity : AppCompatActivity() {
             true
         }
 
-//          TESTING THE FRAGMENTS AND STUFF
-//        intent.extras?.let{
-//            position = it.get("position") as Int
-//            title = it.get("postTitle").toString()
-//            body = it.get("postBody").toString()
-//        }
-//
-//        button = findViewById(R.id.button)
-//        button.setOnClickListener {
-//            fragmentManager.beginTransaction().add(R.id.fragment_container, NotifFragment()).commit()
-//        }
-//
+        intent.extras?.let {
+            title = it.get("postTitle").toString()
+            body = it.get("postBody").toString()
+            recommendSong(title, body)
+        }
+
+
+    }
+
+    private fun recommendSong(title: String, body: String) {
+        bottomNavBar.selectedItemId = R.id.feed_item
+        val fragmentManager = supportFragmentManager
+        fragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, RecommendFragment.newInstance(title, body)).commit()
+    }
+
+    private fun mockDataAdd() {
+        val numPosts: List<Int> = listOf(1, 2, 3)
+        var mockData = mutableListOf<FeedItemModel>()
+        for (i in numPosts) {
+            mockData.add(FeedItemModel("PostTitle" + i, "Example Body Text"))
+        }
+        Repository.feedList = mockData
     }
 }

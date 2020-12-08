@@ -12,7 +12,6 @@ class FeedRecyclerAdapter(private var posts: MutableList<FeedItemModel>, private
 
     inner class ViewHolder internal constructor(itemView: View) : RecyclerView.ViewHolder(itemView){
         var postTitle: TextView = itemView.findViewById(R.id.postTitle)
-        var postBody: TextView = itemView.findViewById(R.id.postBody)
         var feedPosition: Int = 0
 
         init{
@@ -20,7 +19,7 @@ class FeedRecyclerAdapter(private var posts: MutableList<FeedItemModel>, private
                 val intent = Intent(context, MainActivity::class.java).apply{
                     putExtra("position", feedPosition)
                     putExtra("postTitle", postTitle.text)
-                    putExtra("postBody", postBody.text)
+                    putExtra("postBody", posts[feedPosition].postBody)
                 }
                 context.startActivity(intent)
             }
@@ -35,7 +34,6 @@ class FeedRecyclerAdapter(private var posts: MutableList<FeedItemModel>, private
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.postTitle.text = posts.get(position).postTitle
-        holder.postBody.text = posts.get(position).postBody
         holder.feedPosition = position
     }
 
