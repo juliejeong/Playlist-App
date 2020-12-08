@@ -9,6 +9,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var bottomNavBar: BottomNavigationView
 
     // comments testing ---------------------
+    // second comment
 
     private var position = -1
     private var title = ""
