@@ -1,8 +1,7 @@
 package com.example.playlistapp
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Button
+import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
@@ -12,30 +11,31 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        mockDataAdd()
+        feedMockData()
+        notifMockData()
 
         val fragmentManager = supportFragmentManager
         fragmentManager.beginTransaction()
-            .add(R.id.fragment_container, ProfileFragment())
-            .commit()
+                .add(R.id.fragment_container, ProfileFragment())
+                .commit()
 
         bottomNavBar = findViewById(R.id.bottom_nav)
         bottomNavBar.setOnNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.profile_item -> {
                     fragmentManager.beginTransaction()
-                        .replace(R.id.fragment_container, ProfileFragment())
-                        .commit()
+                            .replace(R.id.fragment_container, ProfileFragment())
+                            .commit()
                 }
                 R.id.feed_item -> {
                     fragmentManager.beginTransaction()
-                        .replace(R.id.fragment_container, FeedFragment())
-                        .commit()
+                            .replace(R.id.fragment_container, FeedFragment())
+                            .commit()
                 }
                 R.id.notif_item -> {
                     fragmentManager.beginTransaction()
-                        .replace(R.id.fragment_container, NotifFragment())
-                        .commit()
+                            .replace(R.id.fragment_container, NotifFragment())
+                            .commit()
                 }
             }
             true
@@ -54,15 +54,22 @@ class MainActivity : AppCompatActivity() {
         bottomNavBar.selectedItemId = R.id.feed_item
         val fragmentManager = supportFragmentManager
         fragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, RecommendFragment.newInstance(title, body)).commit()
+                .replace(R.id.fragment_container, RecommendFragment.newInstance(title, body)).commit()
     }
 
-    private fun mockDataAdd() {
-        val numPosts: List<Int> = listOf(1, 2, 3)
+    private fun feedMockData() {
         var mockData = mutableListOf<FeedItemModel>()
-        for (i in numPosts) {
+        for (i in 1..10) {
             mockData.add(FeedItemModel("PostTitle" + i, "Example Body Text"))
         }
         Repository.feedList = mockData
+    }
+
+    private fun notifMockData() {
+        var mockData = mutableListOf<NotifItemModel>()
+        for (i in 1..10) {
+            mockData.add(NotifItemModel("Person" + i + " recommended a song!", "" + i + "h ago"))
+        }
+        Repository.notifList = mockData
     }
 }

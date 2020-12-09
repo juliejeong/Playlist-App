@@ -1,7 +1,6 @@
 package com.example.playlistapp
 
 import android.content.Context
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,17 +11,18 @@ class NotifRecyclerAdapter(private var notifs: MutableList<NotifItemModel>, priv
 
     inner class ViewHolder internal constructor(itemView: View) : RecyclerView.ViewHolder(itemView){
         var notifText: TextView = itemView.findViewById(R.id.notificationText)
+        var timeReceived: TextView = itemView.findViewById(R.id.timeReceived)
         var notifPosition: Int = 0
 
-        init{
-            itemView.setOnClickListener {
-                val intent = Intent(context, MainActivity::class.java).apply{
-                    putExtra("position", notifPosition)
-                    putExtra("notifText", notifText.text)
-                }
-                context.startActivity(intent)
-            }
-        }
+//        init{
+//            itemView.setOnClickListener {
+//                val intent = Intent(context, MainActivity::class.java).apply{
+//                    putExtra("position", notifPosition)
+//                    putExtra("notifText", notifText.text)
+//                }
+//                context.startActivity(intent)
+//            }
+//        }
 
     }
 
@@ -33,6 +33,7 @@ class NotifRecyclerAdapter(private var notifs: MutableList<NotifItemModel>, priv
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.notifText.text = notifs.get(position).notifText
+        holder.timeReceived.text = notifs.get(position).timeReceived
         holder.notifPosition = position
     }
 
