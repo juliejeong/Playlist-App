@@ -5,5 +5,8 @@
     <string name="feed">Feed:</string>
     <string name="search_for_a_song">Search for a song!</string>
     <string name="notifications">Notifications:</string>
+    <string name="genre">Genre:</string>
     <string name="note">Note:</string>
+    <string name="active_for">Active For:</string>
+    <string name="make_request">Make Request</string>
 </resources>
