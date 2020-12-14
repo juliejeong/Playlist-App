@@ -4,8 +4,8 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
-// feed : buttons, routes to responses & request fragments
-// naviagation: change notif --> request
+// feed : buttons, routes to responses & request fragments - done
+// naviagation: change notif --> request - done
 // if enough time, find friends
 // network !!!!
 
@@ -33,22 +33,45 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.feed_item -> {
                     fragmentManager.beginTransaction()
-                            .replace(R.id.fragment_container, FeedFragment())
-                            .commit()
+                        .replace(R.id.fragment_container, FeedFragment())
+                        .commit()
                 }
-                R.id.notif_item -> {
+                R.id.req_item -> {
                     fragmentManager.beginTransaction()
-                            .replace(R.id.fragment_container, RequestFragment())
-                            .commit()
+                        .replace(R.id.fragment_container, RequestFragment())
+                        .commit()
                 }
             }
             true
         }
 
         intent.extras?.let {
-            title = it.get("postTitle").toString()
-            body = it.get("postBody").toString()
-            recommendSong(title, body)
+            if (it.get("recommend?") != null) {
+                val displayRecommendFragment: Boolean = it.get("recommend?") as Boolean
+                if (displayRecommendFragment) {
+                    title = it.get("postTitle").toString()
+                    body = it.get("postBody").toString()
+                    recommendSong(title, body)
+                }
+            }
+        }
+
+        intent.extras?.let {
+            if (it.get("responses?") != null) {
+                val displayResponses: Boolean = it.get("responses?") as Boolean
+                if (displayResponses) {
+                    showResponses()
+                }
+            }
+        }
+
+        intent.extras?.let {
+            if (it.get("find friends?") != null) {
+                val displayFindFriends: Boolean = it.get("find friends?") as Boolean
+                if (displayFindFriends) {
+                    searchForFriends()
+                }
+            }
         }
 
 
@@ -67,6 +90,20 @@ class MainActivity : AppCompatActivity() {
             mockData.add(FeedItemModel("PostTitle" + i, "Example Body Text"))
         }
         Repository.feedList = mockData
+    }
+
+    private fun showResponses() {
+        bottomNavBar.selectedItemId = R.id.feed_item
+        val fragmentManager = supportFragmentManager
+        fragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, ResponseFragment()).commit()
+    }
+
+    private fun searchForFriends() {
+        bottomNavBar.selectedItemId = R.id.profile_item
+        val fragmentManager = supportFragmentManager
+        fragmentManager.beginTransaction().replace(R.id.fragment_container, FriendsFragment())
+            .commit()
     }
 
 }

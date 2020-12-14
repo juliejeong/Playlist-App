@@ -1,10 +1,12 @@
 package com.example.playlistapp
 
+import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import androidx.fragment.app.Fragment
 
 //**UNFINISHED**
 // TODO: Rename parameter arguments, choose names that match
@@ -35,7 +37,15 @@ class ProfileFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_profile, container, false)
+        val view: View = inflater.inflate(R.layout.fragment_profile, container, false)
+        var findFriendsButton: Button = view.findViewById(R.id.button_find_friends)
+        findFriendsButton.setOnClickListener {
+            val intent = Intent(context, MainActivity::class.java).apply {
+                putExtra("find friends?", true)
+            }
+            context!!.startActivity(intent)
+        }
+        return view
     }
 
     companion object {

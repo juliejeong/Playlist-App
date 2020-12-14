@@ -5,33 +5,40 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
 class FeedRecyclerAdapter(private var posts: MutableList<FeedItemModel>, private val context: Context) : RecyclerView.Adapter<FeedRecyclerAdapter.ViewHolder>() {
 
-    inner class ViewHolder internal constructor(itemView: View) : RecyclerView.ViewHolder(itemView){
-        var reqUser: TextView = itemView.findViewById(R.id.req_user)
-        var reqBody: TextView = itemView.findViewById(R.id.req_body)
+    inner class ViewHolder internal constructor(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        var feedUser: TextView = itemView.findViewById(R.id.feed_user)
+        var postBody: TextView = itemView.findViewById(R.id.post_body)
+        var recommendButton: Button = itemView.findViewById(R.id.button_rec)
+        var responseButton: Button = itemView.findViewById(R.id.button_res)
+
         var feedPosition: Int = 0
 
-        /*
-        init{
-            itemView.setOnClickListener {
-                val intent = Intent(context, MainActivity::class.java).apply{
+        init {
+            recommendButton.setOnClickListener {
+                val intent = Intent(context, MainActivity::class.java).apply {
                     putExtra("position", feedPosition)
-                    putExtra("postTitle", reqUser.text)
-                    putExtra("postBody", posts[feedPosition].postBody)
+                    putExtra("postTitle", feedUser.text)
+                    putExtra("postBody", postBody.text)
+                    putExtra("recommend?", true)
+                }
+                context.startActivity(intent)
+            }
+
+            responseButton.setOnClickListener {
+                val intent = Intent(context, MainActivity::class.java).apply {
+                    putExtra("responses?", true)
                 }
                 context.startActivity(intent)
             }
         }
 
-         */
 
-        //responses button
-
-        //request button
 
     }
 
@@ -41,8 +48,8 @@ class FeedRecyclerAdapter(private var posts: MutableList<FeedItemModel>, private
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.reqUser.text = posts.get(position).reqUser
-        holder.reqBody.text = posts.get(position).reqBody
+        holder.feedUser.text = posts.get(position).feedUser
+        holder.postBody.text = posts.get(position).postBody
         holder.feedPosition = position
     }
 

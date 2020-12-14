@@ -14,9 +14,9 @@
         android:title="Feed"
         app:showAsAction="ifRoom" />
     <item
-        android:id="@+id/notif_item"
+        android:id="@+id/req_item"
         android:enabled="true"
-        android:icon="@drawable/inbox"
-        android:title="Notifications"
+        android:icon="@drawable/make_req"
+        android:title="@string/request"
         app:showAsAction="ifRoom" />
 </menu>
