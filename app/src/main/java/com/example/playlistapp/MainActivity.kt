@@ -4,6 +4,11 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
+// feed : buttons, routes to responses & request fragments
+// naviagation: change notif --> request
+// if enough time, find friends
+// network !!!!
+
 class MainActivity : AppCompatActivity() {
     private lateinit var bottomNavBar: BottomNavigationView
     private var title = ""
@@ -12,7 +17,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         feedMockData()
-        notifMockData()
 
         val fragmentManager = supportFragmentManager
         fragmentManager.beginTransaction()
@@ -34,7 +38,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.notif_item -> {
                     fragmentManager.beginTransaction()
-                            .replace(R.id.fragment_container, NotifFragment())
+                            .replace(R.id.fragment_container, RequestFragment())
                             .commit()
                 }
             }
@@ -65,11 +69,4 @@ class MainActivity : AppCompatActivity() {
         Repository.feedList = mockData
     }
 
-    private fun notifMockData() {
-        var mockData = mutableListOf<NotifItemModel>()
-        for (i in 1..10) {
-            mockData.add(NotifItemModel("Person" + i + " recommended a song!", "" + i + "h ago"))
-        }
-        Repository.notifList = mockData
-    }
 }

@@ -11,19 +11,27 @@ import androidx.recyclerview.widget.RecyclerView
 class FeedRecyclerAdapter(private var posts: MutableList<FeedItemModel>, private val context: Context) : RecyclerView.Adapter<FeedRecyclerAdapter.ViewHolder>() {
 
     inner class ViewHolder internal constructor(itemView: View) : RecyclerView.ViewHolder(itemView){
-        var postTitle: TextView = itemView.findViewById(R.id.postTitle)
+        var reqUser: TextView = itemView.findViewById(R.id.req_user)
+        var reqBody: TextView = itemView.findViewById(R.id.req_body)
         var feedPosition: Int = 0
 
+        /*
         init{
             itemView.setOnClickListener {
                 val intent = Intent(context, MainActivity::class.java).apply{
                     putExtra("position", feedPosition)
-                    putExtra("postTitle", postTitle.text)
+                    putExtra("postTitle", reqUser.text)
                     putExtra("postBody", posts[feedPosition].postBody)
                 }
                 context.startActivity(intent)
             }
         }
+
+         */
+
+        //responses button
+
+        //request button
 
     }
 
@@ -33,7 +41,8 @@ class FeedRecyclerAdapter(private var posts: MutableList<FeedItemModel>, private
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.postTitle.text = posts.get(position).postTitle
+        holder.reqUser.text = posts.get(position).reqUser
+        holder.reqBody.text = posts.get(position).reqBody
         holder.feedPosition = position
     }
 

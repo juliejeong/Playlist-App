@@ -36,7 +36,7 @@ class RecommendFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view: View = inflater.inflate(R.layout.fragment_recommend, container, false)
-        titleText = view.findViewById(R.id.postTitle)
+        titleText = view.findViewById(R.id.response_user)
         titleText.text = postTitle
         bodyText = view.findViewById(R.id.postBody)
         bodyText.text = postBody

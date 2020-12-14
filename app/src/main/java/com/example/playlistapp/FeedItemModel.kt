@@ -1,6 +1,6 @@
 package com.example.playlistapp
 
 data class FeedItemModel (
-    val postTitle: String,
-    val postBody: String
+    val reqUser: String,
+    val reqBody: String
 )
