@@ -38,7 +38,7 @@ class ProfileFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view: View = inflater.inflate(R.layout.fragment_profile, container, false)
-        var findFriendsButton: Button = view.findViewById(R.id.button_find_friends)
+        var findFriendsButton: Button = view.findViewById(R.id.button_friends)
         findFriendsButton.setOnClickListener {
             val intent = Intent(context, MainActivity::class.java).apply {
                 putExtra("find friends?", true)

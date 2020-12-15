@@ -5,5 +5,6 @@ class Repository {
         var feedList = mutableListOf<FeedItemModel>()
         var responseList = mutableListOf<ResponseItemModel>()
         var friendsList = mutableListOf<FriendsItemModel>()
+        lateinit var profileInfo: User
     }
 }

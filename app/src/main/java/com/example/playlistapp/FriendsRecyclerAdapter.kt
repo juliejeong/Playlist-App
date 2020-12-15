@@ -16,6 +16,7 @@ class FriendsRecyclerAdapter(
 
     inner class ViewHolder internal constructor(itemView: View) :
         RecyclerView.ViewHolder(itemView) {
+        var user: TextView = itemView.findViewById(R.id.user)
         var username: TextView = itemView.findViewById(R.id.username)
         var followButton: Button = itemView.findViewById(R.id.button_follow)
         var friendsPosition: Int = 0
@@ -40,6 +41,7 @@ class FriendsRecyclerAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.user.text = friends.get(position).user
         holder.username.text = friends.get(position).username
         holder.friendsPosition = position
     }
