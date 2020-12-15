@@ -9,7 +9,7 @@
     <string name="make_request">Make Request</string>
     <string name="request">Request</string>
     <string name="find_friends">Find Friends</string>
-    <string name="username">julie_jeong</string>
-    <string name="first_last">Julie Jeong</string>
+    <string name="username">user_name</string>
+    <string name="first_last">User Name</string>
     <string name="follow">Follow</string>
 </resources>
