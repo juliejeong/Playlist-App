@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var bottomNavBar: BottomNavigationView
     private var title = ""
     private var body = ""
-    private var myId = "1"
+    private var myId = 1
     lateinit var myUser : User
     private var myUserInfo: UserInfo = UserInfo("0", "NAME", "@username", null, null, null)
     private var myReq = mutableListOf<SongRequest>()
@@ -34,8 +34,10 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
         feedMockData()
         friendsMockData()
+        responsesMockData()
 
         val fragmentManager = supportFragmentManager
         fragmentManager.beginTransaction()
@@ -102,9 +104,9 @@ class MainActivity : AppCompatActivity() {
 
     //get_user_by_id(user_id)	(GET method)
     //given a user’s id, returns a serialized user, with the user’s id #, name, username, serialized requests, and serialized favorite songs
-    private fun get_user_by_id(user_id: String){
+    private fun get_user_by_id(user_id: Int){
         val requestUserInfo = Request.Builder()
-                .url("https://cadenzaapp.herokuapp.com/api/users/{$user_id}/").build()
+                .url("https://cadenzaapp.herokuapp.com/api/users/{${user_id.toString()}}/").build()
 
         client.newCall(requestUserInfo).enqueue(object: Callback {
             override fun onFailure(call: Call, e: IOException) {
@@ -139,9 +141,9 @@ class MainActivity : AppCompatActivity() {
 
     //get_requests_by_user(user_id) 	(GET method)
     //given a user’s id, returns a user’s requests
-    private fun get_requests_by_user (user_id: String){
+    private fun get_requests_by_user (user_id: Int){
         val requestReqs = Request.Builder()
-                .url("https://cadenzaapp.herokuapp.com/api/users/{$user_id}/requests/").build()
+                .url("https://cadenzaapp.herokuapp.com/api/users/{${user_id.toString()}}/requests/").build()
 
         client.newCall(requestReqs).enqueue(object: Callback {
             override fun onFailure(call: Call, e: IOException) {
@@ -167,14 +169,14 @@ class MainActivity : AppCompatActivity() {
         for (req in myReq){
             feedList.add(FeedItemModel(req.id.toString(), req.message))
         }
-        Repository.feedList = feedList
+       // Repository.feedList = feedList
     }
 
     //get_recommendation_by_id(rec_id) 	(GET method)
     //returns a recommendation, given the recommendation id #
-    private fun get_recommendation_by_id (rec_id: String){
+    private fun get_recommendation_by_id (rec_id: Int){
         val requestRecs = Request.Builder()
-                .url("https://cadenzaapp.herokuapp.com/api/recommendations/{$rec_id}/").build()
+                .url("https://cadenzaapp.herokuapp.com/api/recommendations/{${rec_id.toString()}}/").build()
 
         client.newCall(requestRecs).enqueue(object: Callback {
             override fun onFailure(call: Call, e: IOException) {
@@ -193,6 +195,13 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         })
+
+        //add responses to the responselist
+        for (rec in myRec){
+            responseList.add(ResponseItemModel(rec.id.toString(), rec.message))
+        }
+
+        //Repository.responseList = responseList
     }
 
     private fun recommendSong(title: String, body: String) {
@@ -204,18 +213,39 @@ class MainActivity : AppCompatActivity() {
 
     private fun feedMockData() {
         var mockData = mutableListOf<FeedItemModel>()
-        for (i in 1..6) {
-            mockData.add(FeedItemModel("PostTitle" + i, "Example Body Text"))
+        mockData.add(FeedItemModel("Finals coming up...", "Please recommend me songs for studying"))
+        mockData.add(FeedItemModel("Hellloooo :)", "I want to listen to some upbeat songs. recs?"))
+        mockData.add(FeedItemModel("sad songs", "i'm not feeling well ;-;"))
+        for (i in 3..6) {
+            mockData.add(FeedItemModel("PostTitle " + i, "Example Body Text...."))
         }
         Repository.feedList = mockData
     }
 
     private fun friendsMockData() {
         var mockData = mutableListOf<FriendsItemModel>()
-        for (i in 1..10) {
-            mockData.add(FriendsItemModel("Friend Name" + i, "f_username" + i))
+        mockData.add(FriendsItemModel("Arianna C.", "arianna_curillo" ))
+        mockData.add(FriendsItemModel("Chloe Chu", "chloechu" ))
+        mockData.add(FriendsItemModel("Connie", "connie_000" ))
+        mockData.add(FriendsItemModel("Michelle Gao", "michelle___gao" ))
+        mockData.add(FriendsItemModel("Julie J.", "julie.jeong" ))
+
+        for (i in 6..9) {
+            mockData.add(FriendsItemModel("Friend Name " + i, "f_username_" + i))
         }
         Repository.friendsList = mockData
+    }
+
+    private fun responsesMockData() {
+        var mockData = mutableListOf<ResponseItemModel>()
+        mockData.add(ResponseItemModel("Here is my rec!", "I hope you like it"))
+        mockData.add(ResponseItemModel("BEST SONG", "you will love it <3"))
+        mockData.add(ResponseItemModel("song rec", "lmk what you think"))
+
+        for (i in 4..7) {
+            mockData.add(ResponseItemModel("Song recommendation " + i, "message " + i))
+        }
+        Repository.responseList = mockData
     }
 
     private fun showResponses() {
