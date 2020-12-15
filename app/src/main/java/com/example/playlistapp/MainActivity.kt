@@ -1,22 +1,41 @@
 package com.example.playlistapp
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.squareup.moshi.JsonAdapter
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import okhttp3.*
+import java.io.IOException
 
-// feed : buttons, routes to responses & request fragments - done
-// naviagation: change notif --> request - done
-// if enough time, find friends
-// network !!!!
+private val client = OkHttpClient()
+
+private val moshi = Moshi.Builder().addLast(KotlinJsonAdapterFactory()).build()
+private val userInfoJsonAdapter : JsonAdapter<UserInfo> = moshi.adapter(UserInfo:: class.java)
+private val reqJsonAdapter : JsonAdapter<Requests> = moshi.adapter(Requests:: class.java)
+private val recJsonAdapter : JsonAdapter<Recommendations> = moshi.adapter(Recommendations:: class.java)
 
 class MainActivity : AppCompatActivity() {
     private lateinit var bottomNavBar: BottomNavigationView
     private var title = ""
     private var body = ""
+    private var myId = "1"
+    lateinit var myUser : User
+    private var myUserInfo: UserInfo = UserInfo("0", "NAME", "@username", null, null, null)
+    private var myReq = mutableListOf<SongRequest>()
+    private var myRec = mutableListOf<Recommendation>()
+
+    private var feedList = mutableListOf<FeedItemModel>()
+    private var responseList = mutableListOf<ResponseItemModel>()
+    private var friendsList = mutableListOf<FriendsItemModel>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         feedMockData()
+        friendsMockData()
 
         val fragmentManager = supportFragmentManager
         fragmentManager.beginTransaction()
@@ -44,6 +63,12 @@ class MainActivity : AppCompatActivity() {
             }
             true
         }
+
+        //retrieve user info
+        get_user_by_id(myId)
+
+        //retreive requests from a user
+        get_requests_by_user(myId)
 
         intent.extras?.let {
             if (it.get("recommend?") != null) {
@@ -73,8 +98,101 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+    }
 
+    //get_user_by_id(user_id)	(GET method)
+    //given a user’s id, returns a serialized user, with the user’s id #, name, username, serialized requests, and serialized favorite songs
+    private fun get_user_by_id(user_id: String){
+        val requestUserInfo = Request.Builder()
+                .url("https://cadenzaapp.herokuapp.com/api/users/{$user_id}/").build()
 
+        client.newCall(requestUserInfo).enqueue(object: Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                e.printStackTrace()
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                response.use {
+                    if (!it.isSuccessful) throw IOException("Unexpected code $it")
+
+                    val received: UserInfo? = userInfoJsonAdapter.fromJson(response.body!!.string())
+                    if (received != null) {
+                        myUserInfo = received
+
+                        Log.d("gotcha_user", received.toString())
+                    }
+                }
+            }
+        })
+
+        //retreive UserInfo
+        if (myUserInfo.friends != null) {
+            for (friend in myUserInfo.friends!!) {
+                friendsList.add(FriendsItemModel(friend.user, friend.username))
+            }
+            Repository.friendsList = friendsList
+        }
+
+        //fill out user info for profile
+        Repository.profileInfo = User(myUserInfo.id, myUserInfo.user, myUserInfo.username)
+    }
+
+    //get_requests_by_user(user_id) 	(GET method)
+    //given a user’s id, returns a user’s requests
+    private fun get_requests_by_user (user_id: String){
+        val requestReqs = Request.Builder()
+                .url("https://cadenzaapp.herokuapp.com/api/users/{$user_id}/requests/").build()
+
+        client.newCall(requestReqs).enqueue(object: Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                e.printStackTrace()
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                response.use{
+                    if(!it.isSuccessful) throw IOException("Unexpected code $it")
+
+                    //response.body?.string()?.let { it1 -> Log.d("julie", it1) }
+
+                    val received: Requests? = reqJsonAdapter.fromJson(response.body!!.string())
+                    if (received != null) {
+                        myReq = received.requests
+                        Log.d("gotcha_req", received.toString())
+                    }
+                }
+            }
+        })
+
+        //add requests to the feedlist
+        for (req in myReq){
+            feedList.add(FeedItemModel(req.id.toString(), req.message))
+        }
+        Repository.feedList = feedList
+    }
+
+    //get_recommendation_by_id(rec_id) 	(GET method)
+    //returns a recommendation, given the recommendation id #
+    private fun get_recommendation_by_id (rec_id: String){
+        val requestRecs = Request.Builder()
+                .url("https://cadenzaapp.herokuapp.com/api/recommendations/{$rec_id}/").build()
+
+        client.newCall(requestRecs).enqueue(object: Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                e.printStackTrace()
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                response.use{
+                    if(!it.isSuccessful) throw IOException("Unexpected code $it")
+
+                    val received: Recommendations? = recJsonAdapter.fromJson(response.body!!.string())
+                    if (received != null) {
+                        myRec = received.recommendations
+                        Log.d("gotcha_rec", received.toString())
+                    }
+                }
+            }
+        })
     }
 
     private fun recommendSong(title: String, body: String) {
@@ -86,10 +204,18 @@ class MainActivity : AppCompatActivity() {
 
     private fun feedMockData() {
         var mockData = mutableListOf<FeedItemModel>()
-        for (i in 1..10) {
+        for (i in 1..6) {
             mockData.add(FeedItemModel("PostTitle" + i, "Example Body Text"))
         }
         Repository.feedList = mockData
+    }
+
+    private fun friendsMockData() {
+        var mockData = mutableListOf<FriendsItemModel>()
+        for (i in 1..10) {
+            mockData.add(FriendsItemModel("Friend Name" + i, "f_username" + i))
+        }
+        Repository.friendsList = mockData
     }
 
     private fun showResponses() {
